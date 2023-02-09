@@ -6,6 +6,7 @@ package frc.robot.subsystems.swerve;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 
@@ -93,5 +94,10 @@ public class SwerveModule {
             Conversions.falconToMeters(driveMotor.getSelectedSensorPosition(), Constants.SwerveDrivetrain.WHEEL_CIRCUMFERENCE, Constants.SwerveDrivetrain.DRIVE_GEAR_RATIO), 
             getAngle()
         );
+    }
+
+    public void stop() {
+        this.turningMotor.set(TalonFXControlMode.PercentOutput, 0);
+        this.driveMotor.set(TalonFXControlMode.PercentOutput, 0);
     }
 }

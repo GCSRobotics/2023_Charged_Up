@@ -68,6 +68,14 @@ public class SwerveSubsystem extends SubsystemBase {
 
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.SwerveDrivetrain.MAX_SPEED);
 
+    setModuleStates(isOpenLoop, swerveModuleStates);
+  }
+
+  public void setModuleStates(SwerveModuleState[] swerveModuleStates) {
+    setModuleStates(true, swerveModuleStates);
+  }
+  
+  private void setModuleStates(boolean isOpenLoop, SwerveModuleState[] swerveModuleStates) {
     for (SwerveModule mod : this.swerveModules) {
         mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
     }
@@ -81,6 +89,11 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Back Right Module Angle", this.swerveModules[2].getCanCoder().getDegrees());
     SmartDashboard.putNumber("Back Left Module Angle", this.swerveModules[3].getCanCoder().getDegrees());
 
+    swerveOdometry.update(getYaw(), getModulePositions());
+    SmartDashboard.putNumber("Robot Heading", getGyroAngleDegrees());
+    SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+    
+  
   }
 
     /* Gyro */
@@ -152,4 +165,9 @@ public class SwerveSubsystem extends SubsystemBase {
       return positions;
   }
 
+  public void stopModules() {
+    for(SwerveModule mod :swerveModules) {
+      mod.stop();
+    }
+  }
 }

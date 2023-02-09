@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants;
 import frc.robot.commands.Arm.ExtendArm;
 import frc.robot.commands.Arm.LowerArm;
 import frc.robot.commands.Arm.RaiseArm;
@@ -17,7 +17,19 @@ import frc.robot.commands.Drive.DriveTeleop;
 import frc.robot.subsystems.ArmSubsystems;
 import frc.robot.subsystems.ClawSubsystems;
 import frc.robot.subsystems.SwerveSubsystem;
+
+import java.util.List;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -36,9 +48,9 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController opController =
-      new CommandXboxController(OperatorConstants.operatorControllerPort);
+      new CommandXboxController(Constants.OperatorConstants.operatorControllerPort);
   private final CommandJoystick driveController = 
-      new CommandJoystick(OperatorConstants.driverControllerPort);
+      new CommandJoystick(Constants.OperatorConstants.driverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -77,8 +89,47 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;
-    // An example command will be run in autonomous
-    // return Autos.exampleAuto(m_exampleSubsystem);
+    // Create config for trajectory
+    TrajectoryConfig config =
+        new TrajectoryConfig(
+                Constants.Auto.kMaxSpeedMetersPerSecond,
+                Constants.Auto.kMaxAccelerationMetersPerSecondSquared)
+            // Add kinematics to ensure max speed is actually obeyed
+            .setKinematics(Constants.SwerveDrivetrain.SWERVE_KINEMATICS);
+
+    // An example trajectory to follow.  All units in meters.
+    Trajectory exampleTrajectory =
+        TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(0, 0, new Rotation2d(0)),
+            // Pass through these two interior waypoints, making an 's' curve path
+            List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+            // End 3 meters straight ahead of where we started, facing forward
+            new Pose2d(3, 0, new Rotation2d(0)),
+            config);
+
+    var thetaController =
+        new ProfiledPIDController(
+            Constants.Auto.kPThetaController, 0, 0, Constants.Auto.kThetaControllerConstraints);
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+    SwerveControllerCommand swerveControllerCommand =
+        new SwerveControllerCommand(
+            exampleTrajectory,
+            swerveSub::getPose, // Functional interface to feed supplier
+            Constants.SwerveDrivetrain.SWERVE_KINEMATICS,
+
+            // Position controllers
+            new PIDController(Constants.Auto.kPXController, 0, 0),
+            new PIDController(Constants.Auto.kPYController, 0, 0),
+            thetaController,
+            swerveSub::setModuleStates,
+            swerveSub);
+
+    // Reset odometry to the starting pose of the trajectory.
+    swerveSub.resetOdometry(exampleTrajectory.getInitialPose());
+
+    // Run path following command, then stop at the end.
+    return swerveControllerCommand.andThen(() -> swerveSub.stopModules());
   }
 }
