@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.swerve;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
@@ -14,6 +15,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Robot;
 import frc.lib.math.Conversions;
 import frc.lib.util.CTREModuleState;
@@ -28,7 +30,8 @@ public class SwerveModule {
 
     private final double angleOffset;
     private double lastAngle;
-
+    public double CANcoderInitTime = 0.0;
+    
     SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.SwerveDrivetrain.FF_kS, Constants.SwerveDrivetrain.FF_kV, Constants.SwerveDrivetrain.FF_kA);
 
     public SwerveModule(int moduleNumber, SwerveModuleConstants swerveModuleConstants) {
@@ -52,10 +55,28 @@ public class SwerveModule {
         this.turningMotor.setInverted(Constants.SwerveDrivetrain.ANGLE_MOTOR_INVERTED);
         this.turningMotor.setNeutralMode(Constants.SwerveDrivetrain.ANGLE_NEUTRAL_MODE);
         
+        Timer.delay(0.1);
+        waitForCanCoder();
         double absolutePosition = Conversions.degreesToFalcon(this.getCanCoder().getDegrees() - angleOffset, Constants.SwerveDrivetrain.ANGLE_GEAR_RATIO);
         this.turningMotor.setSelectedSensorPosition(absolutePosition);
 
         this.lastAngle = getState().angle.getDegrees();
+    }
+    private void waitForCanCoder(){
+        /*
+         * Wait for CanCoder. (up to 1000ms)
+         *
+         * preventing race condition during program startup
+         */
+        CANcoderInitTime = -1;
+        for (int i = 0; i < 100; ++i) {
+            angleEncoder.getAbsolutePosition();
+            if (angleEncoder.getLastError() == ErrorCode.OK) {
+                break;
+            }
+            Timer.delay(0.010);            
+            CANcoderInitTime += 10;
+        }
     }
 
     public Rotation2d getCanCoder() {
