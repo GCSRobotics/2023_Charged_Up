@@ -9,12 +9,13 @@ import frc.robot.subsystems.ArmSubsystems;
 
 public class LowerArm extends CommandBase {
 private ArmSubsystems armSubsystems;
-  
+  private double speed = 0.15;
+
   /** Creates a new LowerArm. */
   public LowerArm(ArmSubsystems armSubsystems) {
     // Use addRequirements() here to declare subsystem dependencies.
-  this.armSubsystems = armSubsystems;
-  addRequirements(this.armSubsystems);
+    this.armSubsystems = armSubsystems;
+    addRequirements(this.armSubsystems);
   }
 
   // Called when the command is initially scheduled.
@@ -24,7 +25,7 @@ private ArmSubsystems armSubsystems;
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armSubsystems.LowerArm();
+    armSubsystems.LowerArm(speed);
   }
 
   // Called once the command ends or is interrupted.

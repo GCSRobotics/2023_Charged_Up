@@ -159,4 +159,13 @@ public final class Constants {
   public static final int FlipUpChannel = 2;
   public static final int FlipDownChannel = 3;
 
+      // Turret Rotation Calculations
+      public final static double TopDiameter = 3.5; // 13.5;
+      public final static double BottomDiameter = 3.5; // 1.751;
+      public final static double ElevationGearRatio = 25;
+//      public final static double TurretRevolutionsPerDegree = 360 / (TurretDiameter/TurretSprocketDiameter*TurretGearRatio); // ~1.868;
+  
+    public static final double ELEVATION_REVOLUTIONS_PER_DEGREE = 360 / ElevationGearRatio;
+     public static final double EXTENSION_REVOLUTIONS_PER_INCH = 0;
+
 }

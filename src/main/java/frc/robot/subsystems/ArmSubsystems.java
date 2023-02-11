@@ -5,17 +5,42 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ArmSubsystems extends SubsystemBase {
   private CANSparkMax extensionMotor = new CANSparkMax(Constants.EXTENSION_MOTOR_ID, MotorType.kBrushless);
   private CANSparkMax elevationMotor = new CANSparkMax(Constants.ELEVATION_MOTOR_ID, MotorType.kBrushless);
+  private RelativeEncoder elevationEncoder;
+  private RelativeEncoder extensionEncoder;
+
+  public static final double HOME_DEGREES = 0;
+  public static final double FLOOR_DEGREES = 25;
+  public static final double MID_DEGREES = 65;
+  public static final double HIGH_DEGREES = 90;
+  public static final double HOME_INCHES = 0;
+  public static final double FLOOR_INCHES = 15;
+  public static final double MID_INCHES = 26;
+  public static final double HIGH_INCHES = 44;
 
   /** Creates a new ArmSubsystems. */
-  public ArmSubsystems() {}
+  public ArmSubsystems() {
+    elevationMotor.setInverted(false);
+    elevationEncoder = elevationMotor.getEncoder();
+    elevationEncoder.setPositionConversionFactor(Constants.ELEVATION_REVOLUTIONS_PER_DEGREE);
+    elevationEncoder.setPosition(0);
+
+    extensionMotor.setInverted(false);
+    extensionEncoder = extensionMotor.getEncoder();
+    extensionEncoder.setPositionConversionFactor(Constants.EXTENSION_REVOLUTIONS_PER_INCH);
+    extensionEncoder.setPosition(0);
+  }
 
   @Override
   public void periodic() {
@@ -30,12 +55,20 @@ public class ArmSubsystems extends SubsystemBase {
     extensionMotor.set(-1.0);
   }
 
-  public void RaiseArm () {
-     elevationMotor.set(1.0);
+  public void RaiseArm (double speed) {
+     elevationMotor.set(speed);
   }
 
-  public void LowerArm() {
-    elevationMotor.set(-1.0);
+  public void LowerArm(double speed) {
+    elevationMotor.set(speed);
+  }
+
+  public void moveArm(double speed) {
+    elevationMotor.set(speed);
+  }
+
+  public void lengthenArm(double speed) {
+    extensionMotor.set(speed);
   }
 
   public void stopElevation() {
@@ -44,5 +77,34 @@ public class ArmSubsystems extends SubsystemBase {
 
   public void stopExtension() {
   extensionMotor.set(0.0);
+  }
+
+  public double getElevationDegrees() {
+    return elevationEncoder.getPosition();
+  }
+
+  public void moveArmToDegrees(PIDController pidController, double speed) {
+    double armposition = getElevationDegrees();
+    double output = pidController.calculate(armposition - pidController.getSetpoint());
+    double outputC = -MathUtil.clamp(output, -speed, speed);
+    
+    if (pidController.atSetpoint() || armposition >= HIGH_DEGREES || armposition < 0){
+      stopElevation();
+    } else  {
+      moveArm(outputC);
+      
+    }
+  }
+
+  public void extendArmToInches(PIDController pidController, double speed) {
+    double armposition = extensionEncoder.getPosition();
+    double output = pidController.calculate(armposition - pidController.getSetpoint());
+    double outputC = -MathUtil.clamp(output, -speed, speed);
+
+    if(pidController.atSetpoint() || armposition >= HIGH_INCHES || armposition < 0){
+      stopExtension();
+    } else {
+      lengthenArm(outputC);
+    }
   }
 }

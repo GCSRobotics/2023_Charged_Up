@@ -4,28 +4,36 @@
 
 package frc.robot.commands.Arm;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystems;
 
-public class RaiseArm extends CommandBase {
+public class MoveArm extends CommandBase {
   private ArmSubsystems armSubsystems;
-  private double speed = .15;
+  private PIDController pidController = new PIDController(0.1, 0, 0);
+  private double speed = 0.15;
+  private double degreePosition;
 
-  /** Creates a new RaiseArm. */
-  public RaiseArm(ArmSubsystems armSubsystems) {
+  /** Creates a new MoveArm. */
+  public MoveArm(ArmSubsystems armSubsystems, double degreePosition) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.armSubsystems = armSubsystems;
+    this.degreePosition = degreePosition;
+
     addRequirements(this.armSubsystems);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    pidController.setSetpoint(degreePosition);
+    pidController.setTolerance(2.0);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armSubsystems.RaiseArm(speed);
+    armSubsystems.moveArmToDegrees(pidController, speed);
   }
 
   // Called once the command ends or is interrupted.

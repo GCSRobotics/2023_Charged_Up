@@ -4,34 +4,42 @@
 
 package frc.robot.commands.Arm;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystems;
 
-public class RaiseArm extends CommandBase {
+public class PositionArm extends CommandBase {
   private ArmSubsystems armSubsystems;
-  private double speed = .15;
+  private PIDController pidController = new PIDController(0.1, 0, 0);
+  private double speed = 0.15;
+  private double inchesPosition;
 
-  /** Creates a new RaiseArm. */
-  public RaiseArm(ArmSubsystems armSubsystems) {
+  /** Creates a new PositionArm. */
+  public PositionArm(ArmSubsystems armSubsystems, double inchesPosition) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.armSubsystems = armSubsystems;
+    this.inchesPosition = inchesPosition;
+    
     addRequirements(this.armSubsystems);
-  }
+}
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    pidController.setSetpoint(inchesPosition);
+    pidController.setTolerance(2.0);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armSubsystems.RaiseArm(speed);
+    armSubsystems.extendArmToInches(pidController, speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    armSubsystems.stopElevation();
+    armSubsystems.stopExtension();
   }
 
   // Returns true when the command should end.
