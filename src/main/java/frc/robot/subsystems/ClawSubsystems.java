@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.commands.Claw.Grab;
 
 public class ClawSubsystems extends SubsystemBase {
   private static final DoubleSolenoid GrabSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,

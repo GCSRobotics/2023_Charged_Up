@@ -94,10 +94,11 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Back Left Module caninit", this.swerveModules[3].CANcoderInitTime);
 
 
-    swerveOdometry.update(getYaw(), getModulePositions());
+    this.swerveOdometry.update(getYaw(), getModulePositions());
     SmartDashboard.putNumber("Robot Heading", getGyroAngleDegrees());
     SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
     
+    this.field.setRobotPose(this.swerveOdometry.getPoseMeters());
   
   }
 

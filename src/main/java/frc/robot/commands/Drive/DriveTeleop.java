@@ -13,7 +13,9 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class DriveTeleop extends CommandBase {
   /** Creates a new Drive. */
   
-  private static final double DEADBAND = 0.1;
+  private static final double XDEADBAND = 0.15;
+  private static final double YDEADBAND = 0.15;
+  private static final double RDEADBAND = 0.15;
 
   private double rotation;
   private Translation2d translation;
@@ -43,9 +45,9 @@ public class DriveTeleop extends CommandBase {
       double rAxis = -controller.getRawAxis(2);
       
       /* Deadbands */
-      yAxis = (Math.abs(yAxis) < DEADBAND) ? 0 : yAxis;
-      xAxis = (Math.abs(xAxis) < DEADBAND) ? 0 : xAxis;
-      rAxis = (Math.abs(rAxis) < DEADBAND) ? 0 : rAxis;
+      yAxis = (Math.abs(yAxis) < YDEADBAND) ? 0 : yAxis;
+      xAxis = (Math.abs(xAxis) < XDEADBAND) ? 0 : xAxis;
+      rAxis = (Math.abs(rAxis) < RDEADBAND) ? 0 : rAxis;
 
       translation = new Translation2d(yAxis, xAxis).times(Constants.SwerveDrivetrain.MAX_SPEED);
       rotation = rAxis * Constants.SwerveDrivetrain.MAX_ANGULAR_VELOCITY;
