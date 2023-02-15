@@ -18,6 +18,10 @@ import frc.robot.subsystems.ArmSubsystems;
 import frc.robot.subsystems.ClawSubsystems;
 import frc.robot.subsystems.SwerveSubsystem;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -42,6 +46,10 @@ public class RobotContainer {
   private final CommandJoystick driveController = 
       new CommandJoystick(Constants.OperatorConstants.driverControllerPort);
 
+  private PathPlannerTrajectory placeAndCharge1;
+  private PathPlannerTrajectory placeAndCharge2;
+
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     DriverStation.silenceJoystickConnectionWarning(true);
@@ -49,6 +57,11 @@ public class RobotContainer {
     setDefaultCommands();
     // Configure the trigger bindings
     configureBindings();
+    loadTrajectories();
+  }
+
+  private void loadTrajectories() {
+    placeAndCharge1 = PathPlanner.loadPath("Place and Charge 1", new PathConstraints(4, 3));
   }
 
   private void setDefaultCommands() {
