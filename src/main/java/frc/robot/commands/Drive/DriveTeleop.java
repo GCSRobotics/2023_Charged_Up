@@ -15,7 +15,7 @@ public class DriveTeleop extends CommandBase {
   
   private static final double XDEADBAND = 0.15;
   private static final double YDEADBAND = 0.15;
-  private static final double RDEADBAND = 0.15;
+  private static final double RDEADBAND = 0.2;
 
   private double rotation;
   private Translation2d translation;
@@ -40,9 +40,9 @@ public class DriveTeleop extends CommandBase {
       // double xAxis = -controller.getLeftX();
       // double rAxis = -controller.getRightX();
 
-      double yAxis = -controller.getRawAxis(1);
-      double xAxis = -controller.getRawAxis(0);
-      double rAxis = -controller.getRawAxis(2);
+      double yAxis = -controller.getRawAxis(1) * 0.5;
+      double xAxis = -controller.getRawAxis(0) * 0.5;
+      double rAxis = -controller.getRawAxis(2) * 0.3;
       
       /* Deadbands */
       yAxis = (Math.abs(yAxis) < YDEADBAND) ? 0 : yAxis;

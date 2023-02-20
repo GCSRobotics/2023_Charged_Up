@@ -8,12 +8,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.util.RGBColor;
 import frc.robot.subsystems.LEDSubsystem;
 
-public class IndicateCube extends CommandBase {
+public class IndicateLedColor extends CommandBase {
     LEDSubsystem ledSub;
     RGBColor gamePieceColor;
 
   /** Creates a new IndicateCube. */
-  public IndicateCube(LEDSubsystem subsystem, RGBColor color) {
+  public IndicateLedColor(LEDSubsystem subsystem, RGBColor color) {
     
     // Use addRequirements() here to declare subsystem dependencies.
     ledSub = subsystem;

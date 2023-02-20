@@ -155,7 +155,7 @@ public final class Constants {
   public static final RGBColor CubeColor = new RGBColor(255, 0, 255); // purple
   public static final RGBColor ConeColor = new RGBColor(255, 255, 0); // yellow
 
-  public static final int EXTENSION_MOTOR_ID  = 40;
+  public static final int EXTENSION_MOTOR_ID  = 42;
   public static final int ELEVATION_MOTOR_ID  = 41;
 
   public static final int GrabChannel = 0;  
