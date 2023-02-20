@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import frc.lib.util.RGBColor;
 import frc.robot.subsystems.swerve.SwerveModuleConstants;
 
 /**
@@ -150,6 +151,10 @@ public final class Constants {
     public static final int operatorControllerPort = 1;
   }
 
+  public static final int LEDPWM = 0;
+  public static final RGBColor CubeColor = new RGBColor(255, 0, 255); // purple
+  public static final RGBColor ConeColor = new RGBColor(255, 255, 0); // yellow
+
   public static final int EXTENSION_MOTOR_ID  = 40;
   public static final int ELEVATION_MOTOR_ID  = 41;
 
@@ -166,6 +171,6 @@ public final class Constants {
 //      public final static double TurretRevolutionsPerDegree = 360 / (TurretDiameter/TurretSprocketDiameter*TurretGearRatio); // ~1.868;
   
     public static final double ELEVATION_REVOLUTIONS_PER_DEGREE = 360 / ElevationGearRatio;
-     public static final double EXTENSION_REVOLUTIONS_PER_INCH = 0;
+    public static final double EXTENSION_REVOLUTIONS_PER_INCH = 0;
 
 }

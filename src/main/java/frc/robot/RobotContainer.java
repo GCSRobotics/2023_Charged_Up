@@ -14,8 +14,10 @@ import frc.robot.commands.Claw.FlipUp;
 import frc.robot.commands.Claw.Grab;
 import frc.robot.commands.Claw.Release;
 import frc.robot.commands.Drive.DriveTeleop;
+import frc.robot.commands.led.IndicateCube;
 import frc.robot.subsystems.ArmSubsystems;
 import frc.robot.subsystems.ClawSubsystems;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import com.pathplanner.lib.PathConstraints;
@@ -39,6 +41,7 @@ public class RobotContainer {
   private final ArmSubsystems armSub = new ArmSubsystems();
   private final ClawSubsystems clawSub = new ClawSubsystems();
   private final SwerveSubsystem swerveSub = new SwerveSubsystem();
+  private final LEDSubsystem ledSub = new LEDSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController opController =
@@ -86,6 +89,9 @@ public class RobotContainer {
     opController.povDown().whileTrue(new LowerArm(armSub));
     opController.povRight().whileTrue(new ExtendArm(armSub));
     opController.povLeft().whileTrue(new RetractArm(armSub));
+    opController.leftTrigger().onTrue(new IndicateCube(ledSub, Constants.CubeColor).withTimeout(5));
+    opController.rightTrigger().onTrue(new IndicateCube(ledSub, Constants.ConeColor).withTimeout(5));
+
   }
 
   /**
