@@ -150,7 +150,7 @@ public final class Constants {
     public static final int operatorControllerPort = 1;
   }
 
-  public static final int EXTENSION_MOTOR_ID  = 40;
+  public static final int EXTENSION_MOTOR_ID  = 42;
   public static final int ELEVATION_MOTOR_ID  = 41;
 
   public static final int GrabChannel = 0;  

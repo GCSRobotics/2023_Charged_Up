@@ -8,12 +8,17 @@ import frc.robot.commands.Arm.ExtendArm;
 import frc.robot.commands.Arm.LowerArm;
 import frc.robot.commands.Arm.RaiseArm;
 import frc.robot.commands.Arm.RetractArm;
+import frc.robot.commands.Auton.PlaceRun;
 import frc.robot.commands.Auton.Sdrive;
 import frc.robot.commands.Claw.FlipDown;
 import frc.robot.commands.Claw.FlipUp;
 import frc.robot.commands.Claw.Grab;
 import frc.robot.commands.Claw.Release;
 import frc.robot.commands.Drive.DriveTeleop;
+import frc.robot.commands.sequential.SetToFloor;
+import frc.robot.commands.sequential.SetToHigh;
+import frc.robot.commands.sequential.SetToHome;
+import frc.robot.commands.sequential.SetToMid;
 import frc.robot.subsystems.ArmSubsystems;
 import frc.robot.subsystems.ClawSubsystems;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -22,8 +27,14 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -49,19 +60,37 @@ public class RobotContainer {
   private PathPlannerTrajectory placeAndCharge1;
   private PathPlannerTrajectory placeAndCharge2;
 
+  SendableChooser<PathPlannerTrajectory> auton_chooser = new SendableChooser<>();
+
+  private AddressableLED led;
+  private AddressableLEDBuffer ledBuffer;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // Bring up the default camera server for the RIO camera
+    CameraServer.startAutomaticCapture(0);
     DriverStation.silenceJoystickConnectionWarning(true);
     
     setDefaultCommands();
     // Configure the trigger bindings
     configureBindings();
     loadTrajectories();
+
+    led = new AddressableLED(0);
+    ledBuffer = new AddressableLEDBuffer(60);
+    led.setLength(ledBuffer.getLength());
+
+    led.setData(ledBuffer);
+    led.start();
   }
 
   private void loadTrajectories() {
-    placeAndCharge1 = PathPlanner.loadPath("Place and Charge 1", new PathConstraints(4, 3));
+    auton_chooser.setDefaultOption("Place and Charge 1", PathPlanner.loadPath("Place and Charge 1", new PathConstraints(4, 3)));
+    auton_chooser.addOption("Place and Charge 2", PathPlanner.loadPath("Place and Charge 2", new PathConstraints(4, 3)) );
+
+    // Put the chooser on the dashboard
+    SmartDashboard.putData(auton_chooser);
+
   }
 
   private void setDefaultCommands() {
@@ -78,14 +107,37 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    opController.y().onTrue(new FlipUp(clawSub));
-    opController.a().onTrue(new FlipDown(clawSub));
-    opController.b().onTrue(new Grab(clawSub));
-    opController.x().onTrue(new Release(clawSub));
+    opController.y().onTrue(new SetToHigh(armSub));
+    opController.a().onTrue(new SetToFloor(armSub));
+    opController.b().onTrue(new SetToMid(armSub));
+    opController.x().onTrue(new SetToHome(armSub));
     opController.povUp().whileTrue(new RaiseArm(armSub));
     opController.povDown().whileTrue(new LowerArm(armSub));
     opController.povRight().whileTrue(new ExtendArm(armSub));
     opController.povLeft().whileTrue(new RetractArm(armSub));
+    opController.leftBumper().onTrue(new Grab(clawSub));
+    opController.rightBumper().onTrue(new Release(clawSub));
+//    opController.rightTrigger().onTrue(new SetLeds());
+  }
+
+  private void setLedOrange() {
+    for (var i = 0; i < ledBuffer.getLength(); i++) {
+      ledBuffer.setRGB(i, 255, 255, 0);
+    }
+    // // Fill the buffer with a rainbow
+    // rainbow();
+    // // Set the LEDs
+    led.setData(ledBuffer);
+  }
+
+  private void setLedPurple() {
+    for (var i = 0; i < ledBuffer.getLength(); i++) {
+      ledBuffer.setRGB(i, 255, 0, 255);
+    }
+    // // Fill the buffer with a rainbow
+    // rainbow();
+    // // Set the LEDs
+    led.setData(ledBuffer);
   }
 
   /**
@@ -94,6 +146,9 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new Sdrive(swerveSub);
+    PathPlannerTrajectory trajectory = auton_chooser.getSelected();
+  
+    return new PlaceRun(armSub, clawSub, swerveSub, trajectory, false);
+
   }
 }

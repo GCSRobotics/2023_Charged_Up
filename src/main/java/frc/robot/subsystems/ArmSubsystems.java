@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
@@ -34,11 +35,13 @@ public class ArmSubsystems extends SubsystemBase {
     elevationEncoder = elevationMotor.getEncoder();
     elevationEncoder.setPositionConversionFactor(Constants.ELEVATION_REVOLUTIONS_PER_DEGREE);
     elevationEncoder.setPosition(0);
+    elevationMotor.setIdleMode(IdleMode.kBrake);
 
     extensionMotor.setInverted(false);
     extensionEncoder = extensionMotor.getEncoder();
     extensionEncoder.setPositionConversionFactor(Constants.EXTENSION_REVOLUTIONS_PER_INCH);
     extensionEncoder.setPosition(0);
+    extensionMotor.setIdleMode(IdleMode.kBrake);
   }
 
   @Override
@@ -71,7 +74,7 @@ public class ArmSubsystems extends SubsystemBase {
   }
 
   public void stopElevation() {
-   elevationMotor.set(0.0);
+   elevationMotor.set(0.025);
   }
 
   public void stopExtension() {
