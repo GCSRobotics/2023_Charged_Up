@@ -29,14 +29,18 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
@@ -47,22 +51,23 @@ public class RobotContainer {
   private final LEDSubsystem ledSub = new LEDSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController opController =
-      new CommandXboxController(Constants.OperatorConstants.operatorControllerPort);
-  private final CommandJoystick driveController = 
-      new CommandJoystick(Constants.OperatorConstants.driverControllerPort);
+  private final CommandXboxController opController = new CommandXboxController(
+      Constants.OperatorConstants.operatorControllerPort);
+  private final CommandJoystick driveController = new CommandJoystick(Constants.OperatorConstants.driverControllerPort);
 
   // private PathPlannerTrajectory placeAndCharge1;
   // private PathPlannerTrajectory placeAndCharge2;
 
   SendableChooser<PathPlannerTrajectory> auton_chooser = new SendableChooser<>();
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
     // Bring up the default camera server for the RIO camera
     CameraServer.startAutomaticCapture(0);
     DriverStation.silenceJoystickConnectionWarning(true);
-    
+
     setDefaultCommands();
     // Configure the trigger bindings
     configureBindings();
@@ -70,9 +75,12 @@ public class RobotContainer {
   }
 
   private void loadTrajectories() {
-    auton_chooser.setDefaultOption("Place and Charge 1", PathPlanner.loadPath("Place and Charge 1", new PathConstraints(4, 3)));
-    auton_chooser.addOption("Place and Charge 2", PathPlanner.loadPath("Place and Charge 2", new PathConstraints(4, 3)) );
-    auton_chooser.addOption("Place and Charge 3", PathPlanner.loadPath("Place and Charge 3", new PathConstraints(4, 3)) );
+    auton_chooser.setDefaultOption("Place and Charge 1",
+        PathPlanner.loadPath("Place and Charge 1", new PathConstraints(4, 3)));
+    auton_chooser.addOption("Place and Charge 2",
+        PathPlanner.loadPath("Place and Charge 2", new PathConstraints(4, 3)));
+    auton_chooser.addOption("Place and Charge 3",
+        PathPlanner.loadPath("Place and Charge 3", new PathConstraints(4, 3)));
 
     // Put the chooser on the dashboard
     SmartDashboard.putData(auton_chooser);
@@ -84,15 +92,23 @@ public class RobotContainer {
   }
 
   /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+   * Use this method to define your trigger->command mappings. Triggers can be
+   * created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
+   * an arbitrary
    * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
+   * {@link
+   * CommandXboxController
+   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or
+   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
   private void configureBindings() {
+    
+    driveController.button(12).onTrue(new InstantCommand(() -> swerveSub.zeroGyro()));
+
     // opController.y().onTrue(new SetToHigh(armSub));
     // opController.a().onTrue(new SetToFloor(armSub));
     // opController.b().onTrue(new SetToMid(armSub));
@@ -120,7 +136,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     PathPlannerTrajectory trajectory = auton_chooser.getSelected();
-  
+
     return new PlaceRun(armSub, clawSub, swerveSub, trajectory, false);
 
   }

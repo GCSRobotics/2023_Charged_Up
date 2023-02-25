@@ -36,13 +36,14 @@ public class SwerveSubsystem extends SubsystemBase {
     this.zeroGyro();
 
     this.swerveModules = new SwerveModule[] {
-      new SwerveModule(0, Constants.SwerveDrivetrain.Mod0.constants),
-      new SwerveModule(1, Constants.SwerveDrivetrain.Mod1.constants),
-      new SwerveModule(2, Constants.SwerveDrivetrain.Mod2.constants),
-      new SwerveModule(3, Constants.SwerveDrivetrain.Mod3.constants)
+        new SwerveModule(0, Constants.SwerveDrivetrain.Mod0.constants),
+        new SwerveModule(1, Constants.SwerveDrivetrain.Mod1.constants),
+        new SwerveModule(2, Constants.SwerveDrivetrain.Mod2.constants),
+        new SwerveModule(3, Constants.SwerveDrivetrain.Mod3.constants)
     };
 
-    this.swerveOdometry = new SwerveDriveOdometry(Constants.SwerveDrivetrain.SWERVE_KINEMATICS, this.getYaw(), getModulePositions());
+    this.swerveOdometry = new SwerveDriveOdometry(Constants.SwerveDrivetrain.SWERVE_KINEMATICS, this.getYaw(),
+        getModulePositions());
 
     this.field = new Field2d();
 
@@ -51,20 +52,15 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
     SwerveModuleState[] swerveModuleStates = Constants.SwerveDrivetrain.SWERVE_KINEMATICS.toSwerveModuleStates(
-        fieldRelative ?
-            ChassisSpeeds.fromFieldRelativeSpeeds(
+        fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
+            translation.getX(),
+            translation.getY(),
+            rotation,
+            this.getYaw())
+            : new ChassisSpeeds(
                 translation.getX(),
                 translation.getY(),
-                rotation,
-                this.getYaw()
-            )
-        :
-            new ChassisSpeeds(
-                translation.getX(),
-                translation.getY(),
-                rotation
-            )
-    );
+                rotation));
 
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.SwerveDrivetrain.MAX_SPEED);
 
@@ -74,10 +70,10 @@ public class SwerveSubsystem extends SubsystemBase {
   public void setModuleStates(SwerveModuleState[] swerveModuleStates) {
     setModuleStates(true, swerveModuleStates);
   }
-  
+
   private void setModuleStates(boolean isOpenLoop, SwerveModuleState[] swerveModuleStates) {
     for (SwerveModule mod : this.swerveModules) {
-        mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
+      mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
     }
   }
 
@@ -93,86 +89,84 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Back right Module caninit", this.swerveModules[2].CANcoderInitTime);
     SmartDashboard.putNumber("Back Left Module caninit", this.swerveModules[3].CANcoderInitTime);
 
-
     this.swerveOdometry.update(getYaw(), getModulePositions());
     SmartDashboard.putNumber("Robot Heading", getGyroAngleDegrees());
     SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
-    
+
     this.field.setRobotPose(this.swerveOdometry.getPoseMeters());
-  
+
   }
 
-    /* Gyro */
-    public void zeroGyro() {
-      this.gyro.setYaw(0);
+  /* Gyro */
+  public void zeroGyro() {
+    this.gyro.setYaw(0);
   }
 
-
-  private double optimizeGyro (double degrees) {
+  private double optimizeGyro(double degrees) {
     // 0 < degrees < 360
     if ((degrees > 0.0) && (degrees < 360.0)) {
-        return degrees;
+      return degrees;
     } else {
-        int m = (int) Math.floor( degrees / 360.0 );
-        double optimizedDegrees = degrees - (m * 360.0);
-        return Math.abs(optimizedDegrees);
+      int m = (int) Math.floor(degrees / 360.0);
+      double optimizedDegrees = degrees - (m * 360.0);
+      return Math.abs(optimizedDegrees);
     }
   }
 
   public Rotation2d getYaw() {
-      double[] ypr = new double[3];
-      this.gyro.getYawPitchRoll(ypr);
-      double yaw = optimizeGyro(ypr[0]);
-      return Constants.SwerveDrivetrain.INVERT_GYRO ? Rotation2d.fromDegrees(360 - yaw) : Rotation2d.fromDegrees(yaw);
+    double[] ypr = new double[3];
+    this.gyro.getYawPitchRoll(ypr);
+    double yaw = optimizeGyro(ypr[0]);
+    return Constants.SwerveDrivetrain.INVERT_GYRO ? Rotation2d.fromDegrees(360 - yaw) : Rotation2d.fromDegrees(yaw);
   }
 
   public double getGyroAngleDegrees() {
-      return this.getYaw().getDegrees();
+    return this.getYaw().getDegrees();
   }
 
   public double getGyroAngleRadians() {
-      return this.getYaw().getRadians();
+    return this.getYaw().getRadians();
   }
 
   /* Odometry */
   public Pose2d getPose() {
-      return this.swerveOdometry.getPoseMeters();
+    return this.swerveOdometry.getPoseMeters();
   }
 
   public void setPose(Pose2d pose) {
-      this.swerveOdometry.resetPosition(pose.getRotation(), getModulePositions(), pose);
+    this.swerveOdometry.resetPosition(pose.getRotation(), getModulePositions(), pose);
   }
 
   public void resetOdometry(Pose2d pose) {
-      this.swerveOdometry.resetPosition(this.getYaw(), getModulePositions(), pose);
+    this.swerveOdometry.resetPosition(this.getYaw(), getModulePositions(), pose);
   }
 
   public void dashboard() {
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
     tab.add(this);
-    tab.addNumber("Gyro Angle ???", this::getGyroAngleDegrees).withWidget(BuiltInWidgets.kGyro);
-    tab.addNumber("Gyro Angle (GRAPH) ???", this::getGyroAngleDegrees).withWidget(BuiltInWidgets.kGraph);
+    tab.addNumber("Gyro Angle", this::getGyroAngleDegrees).withWidget(BuiltInWidgets.kGyro);
+    tab.addNumber("Gyro Angle (GRAPH)", this::getGyroAngleDegrees).withWidget(BuiltInWidgets.kGraph);
     SmartDashboard.putData(this.field);
   }
 
-  public SwerveModuleState[] getModuleStates(){
+  public SwerveModuleState[] getModuleStates() {
     SwerveModuleState[] states = new SwerveModuleState[4];
-    for(SwerveModule mod : swerveModules){
-        states[mod.moduleNumber] = mod.getState();
+    for (SwerveModule mod : swerveModules) {
+      states[mod.moduleNumber] = mod.getState();
     }
     return states;
   }
 
-  public SwerveModulePosition[] getModulePositions(){
-      SwerveModulePosition[] positions = new SwerveModulePosition[4];
-      for(SwerveModule mod : swerveModules){
-          positions[mod.moduleNumber] = mod.getPosition();
-      }
-      return positions;
+  public SwerveModulePosition[] getModulePositions() {
+    SwerveModulePosition[] positions = new SwerveModulePosition[4];
+    for (SwerveModule mod : swerveModules) {
+      positions[mod.moduleNumber] = mod.getPosition();
+    }
+    return positions;
   }
 
   public void stopModules() {
-    for(SwerveModule mod :swerveModules) {
+    for (SwerveModule mod : swerveModules) {
       mod.stop();
     }
   }
