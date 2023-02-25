@@ -9,17 +9,11 @@ import java.util.HashMap;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
-
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
-import frc.robot.commands.Arm.LowerArm;
 import frc.robot.commands.Arm.MoveArm;
-import frc.robot.commands.Arm.RaiseArm;
 import frc.robot.commands.sequential.PickUpCube;
 import frc.robot.commands.sequential.PlaceCubeLow;
 import frc.robot.subsystems.ArmSubsystems;

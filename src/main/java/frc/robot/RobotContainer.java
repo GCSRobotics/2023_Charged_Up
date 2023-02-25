@@ -14,11 +14,7 @@ import frc.robot.commands.Claw.GrabCube;
 import frc.robot.commands.Claw.ReleaseCone;
 import frc.robot.commands.Claw.ReleaseCube;
 import frc.robot.commands.Drive.DriveTeleop;
-import frc.robot.commands.led.IndicateLedColor;
-import frc.robot.commands.sequential.SetToFloor;
-import frc.robot.commands.sequential.SetToHigh;
-import frc.robot.commands.sequential.SetToHome;
-import frc.robot.commands.sequential.SetToMid;
+import frc.robot.commands.LED.IndicateLedColor;
 import frc.robot.subsystems.ArmSubsystems;
 import frc.robot.subsystems.ClawSubsystems;
 import frc.robot.subsystems.LEDSubsystem;
@@ -29,8 +25,6 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -58,8 +52,8 @@ public class RobotContainer {
   private final CommandJoystick driveController = 
       new CommandJoystick(Constants.OperatorConstants.driverControllerPort);
 
-  private PathPlannerTrajectory placeAndCharge1;
-  private PathPlannerTrajectory placeAndCharge2;
+  // private PathPlannerTrajectory placeAndCharge1;
+  // private PathPlannerTrajectory placeAndCharge2;
 
   SendableChooser<PathPlannerTrajectory> auton_chooser = new SendableChooser<>();
 
