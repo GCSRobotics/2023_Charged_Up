@@ -23,7 +23,7 @@ private ClawSubsystems clawSubsystems;
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    clawSubsystems.FlipUp();
+    // clawSubsystems.FlipUp();
   }
 
   // Called once the command ends or is interrupted.

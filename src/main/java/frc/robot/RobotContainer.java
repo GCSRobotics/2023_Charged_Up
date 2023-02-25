@@ -9,11 +9,10 @@ import frc.robot.commands.Arm.LowerArm;
 import frc.robot.commands.Arm.RaiseArm;
 import frc.robot.commands.Arm.RetractArm;
 import frc.robot.commands.Auton.PlaceRun;
-import frc.robot.commands.Auton.Sdrive;
-import frc.robot.commands.Claw.FlipDown;
-import frc.robot.commands.Claw.FlipUp;
-import frc.robot.commands.Claw.Grab;
-import frc.robot.commands.Claw.Release;
+import frc.robot.commands.Claw.GrabCone;
+import frc.robot.commands.Claw.GrabCube;
+import frc.robot.commands.Claw.ReleaseCone;
+import frc.robot.commands.Claw.ReleaseCube;
 import frc.robot.commands.Drive.DriveTeleop;
 import frc.robot.commands.led.IndicateLedColor;
 import frc.robot.commands.sequential.SetToFloor;
@@ -36,7 +35,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -65,9 +63,6 @@ public class RobotContainer {
 
   SendableChooser<PathPlannerTrajectory> auton_chooser = new SendableChooser<>();
 
-  private AddressableLED led;
-  private AddressableLEDBuffer ledBuffer;
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Bring up the default camera server for the RIO camera
@@ -78,18 +73,12 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     loadTrajectories();
-
-    led = new AddressableLED(0);
-    ledBuffer = new AddressableLEDBuffer(60);
-    led.setLength(ledBuffer.getLength());
-
-    led.setData(ledBuffer);
-    led.start();
   }
 
   private void loadTrajectories() {
     auton_chooser.setDefaultOption("Place and Charge 1", PathPlanner.loadPath("Place and Charge 1", new PathConstraints(4, 3)));
     auton_chooser.addOption("Place and Charge 2", PathPlanner.loadPath("Place and Charge 2", new PathConstraints(4, 3)) );
+    auton_chooser.addOption("Place and Charge 3", PathPlanner.loadPath("Place and Charge 3", new PathConstraints(4, 3)) );
 
     // Put the chooser on the dashboard
     SmartDashboard.putData(auton_chooser);
@@ -110,16 +99,23 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    opController.y().onTrue(new SetToHigh(armSub));
-    opController.a().onTrue(new SetToFloor(armSub));
-    opController.b().onTrue(new SetToMid(armSub));
-    opController.x().onTrue(new SetToHome(armSub));
+    // opController.y().onTrue(new SetToHigh(armSub));
+    // opController.a().onTrue(new SetToFloor(armSub));
+    // opController.b().onTrue(new SetToMid(armSub));
+    // opController.x().onTrue(new SetToHome(armSub));
+
     opController.povUp().whileTrue(new RaiseArm(armSub));
     opController.povDown().whileTrue(new LowerArm(armSub));
     opController.povRight().whileTrue(new ExtendArm(armSub));
     opController.povLeft().whileTrue(new RetractArm(armSub));
-    opController.leftTrigger().onTrue(new IndicateLedColor(ledSub, Constants.CubeColor).withTimeout(5));
-    opController.rightTrigger().onTrue(new IndicateLedColor(ledSub, Constants.ConeColor).withTimeout(5));
+
+    opController.leftBumper().onTrue(new GrabCube(clawSub));
+    opController.rightBumper().onTrue(new ReleaseCube(clawSub));
+    opController.leftTrigger().onTrue(new GrabCone(clawSub));
+    opController.rightTrigger().onTrue(new ReleaseCone(clawSub));
+
+    opController.start().onTrue(new IndicateLedColor(ledSub, Constants.CubeColor).withTimeout(5));
+    opController.back().onTrue(new IndicateLedColor(ledSub, Constants.ConeColor).withTimeout(5));
 
   }
 

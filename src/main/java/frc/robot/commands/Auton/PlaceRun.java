@@ -40,7 +40,7 @@ public class PlaceRun extends SequentialCommandGroup {
 
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("place1", new MoveArm(armSubsystem, ArmSubsystems.FLOOR_DEGREES));
-    eventMap.put("PickUp", new PickUpCube(clawSub, armSubsystem));
+    eventMap.put("PickUp", new PickUpCube(clawSub, armSubsystem)); 
     eventMap.put("place2", new PlaceCubeLow(clawSub, armSubsystem));
 
 

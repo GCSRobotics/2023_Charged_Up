@@ -146,6 +146,7 @@ public final class Constants {
         new TrapezoidProfile.Constraints(
             kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
   }
+  
   public static class OperatorConstants {
     public static final int driverControllerPort = 0;
     public static final int operatorControllerPort = 1;
@@ -160,9 +161,12 @@ public final class Constants {
 
   public static final int GrabChannel = 0;  
   public static final int ReleaseChannel= 1;
+  public static final int ConeChannelIn = 14;  
+  public static final int ConeChannelOut= 15;
 
-  public static final int FlipUpChannel = 2;
-  public static final int FlipDownChannel = 3;
+
+//   public static final int FlipUpChannel = 2;
+//   public static final int FlipDownChannel = 3;
 
       // Turret Rotation Calculations
       public final static double TopDiameter = 3.5; // 13.5;

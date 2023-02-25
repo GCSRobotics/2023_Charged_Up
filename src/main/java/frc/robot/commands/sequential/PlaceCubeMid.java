@@ -5,7 +5,7 @@
 package frc.robot.commands.sequential;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.Claw.Release;
+import frc.robot.commands.Claw.ReleaseCube;
 import frc.robot.subsystems.ArmSubsystems;
 import frc.robot.subsystems.ClawSubsystems;
 
@@ -19,7 +19,7 @@ public class PlaceCubeMid extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new SetToMid(armSub),
-      new Release(clawSub),
+      new ReleaseCube(clawSub),
       new SetToHome(armSub)
     );
   }

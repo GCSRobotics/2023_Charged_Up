@@ -7,10 +7,12 @@ package frc.robot.commands.Claw;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystems;
 
-public class Release extends CommandBase {
-private ClawSubsystems clawSubsystems;
-  /** Creates a new Release. */
-  public Release(ClawSubsystems clawSubsystems) {
+public class GrabCone extends CommandBase {
+
+  private ClawSubsystems clawSubsystems;
+
+  /** Creates a new GrabCone. */
+  public GrabCone(ClawSubsystems clawSubsystems) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.clawSubsystems=clawSubsystems;
     addRequirements(this.clawSubsystems);
@@ -23,7 +25,7 @@ private ClawSubsystems clawSubsystems;
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    clawSubsystems.Release();
+    clawSubsystems.GrabCone();
   }
 
   // Called once the command ends or is interrupted.
@@ -33,6 +35,6 @@ private ClawSubsystems clawSubsystems;
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

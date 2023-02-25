@@ -16,44 +16,60 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ClawSubsystems extends SubsystemBase {
-  private static final DoubleSolenoid GrabSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
+  private static final DoubleSolenoid CubeSolenoid = new DoubleSolenoid(5, PneumaticsModuleType.REVPH,
       Constants.GrabChannel, Constants.ReleaseChannel);
- 
-  private static final DoubleSolenoid FlipSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
-      Constants.FlipUpChannel, Constants.FlipDownChannel);
-        
+  private static final DoubleSolenoid ConeSolenoid = new DoubleSolenoid(5, PneumaticsModuleType.REVPH,
+      Constants.ConeChannelIn, Constants.ConeChannelOut);
+
+  // private static final DoubleSolenoid FlipSolenoid = new
+  // DoubleSolenoid(PneumaticsModuleType.CTREPCM,
+  // Constants.FlipUpChannel, Constants.FlipDownChannel);
+
   private Rev2mDistanceSensor distSensor;
-    
+
   /** Creates a new ClawSubsystems. */
   public ClawSubsystems() {
-    distSensor = new Rev2mDistanceSensor(Port.kOnboard, Unit.kInches, RangeProfile.kHighSpeed);
-    distSensor.setAutomaticMode(true);
+    // distSensor = new Rev2mDistanceSensor(Port.kOnboard, Unit.kInches,
+    // RangeProfile.kHighSpeed);
+    // distSensor.setAutomaticMode(true);
   }
-
-  
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if (isPiecePresent()) {
-      Grab();
-    }
-
-  }
-  public void Grab() {
-    GrabSolenoid.set(Value.kForward);
-  }
-  public void Release() {
-    GrabSolenoid.set(Value.kReverse);
-  }
-  public void FlipUp() {
-    FlipSolenoid.set(Value.kForward);
+    // if (isPiecePresent()) {
+    // Grab();
+    // }
   }
 
-  public void FlipDown(){
-    FlipSolenoid.set(Value.kReverse);
+  public void GrabCube() {
+    CubeSolenoid.set(Value.kForward);
+    ConeSolenoid.set(Value.kReverse);
   }
-  public boolean isPiecePresent () {
+
+  public void ReleaseCube() {
+    CubeSolenoid.set(Value.kReverse);
+    ConeSolenoid.set(Value.kReverse);
+  }
+
+  public void GrabCone() {
+    ConeSolenoid.set(Value.kForward);
+    CubeSolenoid.set(Value.kForward);
+  }
+
+  public void ReleaseCone() {
+    ConeSolenoid.set(Value.kReverse);
+    CubeSolenoid.set(Value.kReverse);
+  }
+
+  // public void FlipUp() {
+  // FlipSolenoid.set(Value.kForward);
+  // }
+
+  // public void FlipDown(){
+  // FlipSolenoid.set(Value.kReverse);
+  // }
+  public boolean isPiecePresent() {
     return distSensor.isRangeValid() && distSensor.getRange() <= 3.5;
   }
 }
