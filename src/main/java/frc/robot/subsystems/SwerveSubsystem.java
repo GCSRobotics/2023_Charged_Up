@@ -33,7 +33,8 @@ public class SwerveSubsystem extends SubsystemBase {
   public SwerveSubsystem() {
     this.gyro = new Pigeon2(Constants.SwerveDrivetrain.GYRO_ID);
     this.gyro.configFactoryDefault();
-    this.zeroGyro();
+    // this.zeroGyro();
+    this.gyro.setYaw(180);
 
     this.swerveModules = new SwerveModule[] {
         new SwerveModule(0, Constants.SwerveDrivetrain.Mod0.constants),
@@ -90,6 +91,8 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Back Left Module caninit", this.swerveModules[3].CANcoderInitTime);
 
     this.swerveOdometry.update(getYaw(), getModulePositions());
+    SmartDashboard.putNumber("Robot Roll", getRoll());
+    SmartDashboard.putNumber("Robot Pitch", getPitch());
     SmartDashboard.putNumber("Robot Heading", getGyroAngleDegrees());
     SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
 
@@ -118,6 +121,14 @@ public class SwerveSubsystem extends SubsystemBase {
     this.gyro.getYawPitchRoll(ypr);
     double yaw = optimizeGyro(ypr[0]);
     return Constants.SwerveDrivetrain.INVERT_GYRO ? Rotation2d.fromDegrees(360 - yaw) : Rotation2d.fromDegrees(yaw);
+  }
+
+  public double getRoll() {
+    return this.gyro.getRoll();
+  }
+
+  public double getPitch() {
+    return this.gyro.getPitch();
   }
 
   public double getGyroAngleDegrees() {

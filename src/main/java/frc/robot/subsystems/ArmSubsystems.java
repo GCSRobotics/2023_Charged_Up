@@ -14,15 +14,18 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ArmSubsystems extends SubsystemBase {
   private CANSparkMax extensionMotor = new CANSparkMax(Constants.EXTENSION_MOTOR_ID, MotorType.kBrushless);
- // private CANSparkMax elevationMotor = new CANSparkMax(Constants.ELEVATION_MOTOR_ID, MotorType.kBrushless);
+  // private CANSparkMax elevationMotor = new
+  // CANSparkMax(Constants.ELEVATION_MOTOR_ID, MotorType.kBrushless);
   private VictorSPX elevationMotor = new VictorSPX(Constants.ELEVATION_MOTOR_ID);
   private RelativeEncoder elevationEncoder;
   private RelativeEncoder extensionEncoder;
+  private DigitalInput extensionLimit = new DigitalInput(9);
 
   public static final double HOME_DEGREES = 0;
   public static final double FLOOR_DEGREES = 25;
@@ -54,16 +57,20 @@ public class ArmSubsystems extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public void ExtendArm () {
+  public void ExtendArm() {
     extensionMotor.set(1.0);
   }
 
-  public void RetractArm () {
-    extensionMotor.set(-1.0);
+  public void RetractArm() {
+    // if (extensionLimit.get()) {
+    //   extensionMotor.set(0.0);
+    // } else {
+      extensionMotor.set(-1.0);
+    // }
   }
 
-  public void RaiseArm (double speed) {
-     elevationMotor.set(VictorSPXControlMode.PercentOutput, speed);
+  public void RaiseArm(double speed) {
+    elevationMotor.set(VictorSPXControlMode.PercentOutput, speed);
   }
 
   public void LowerArm(double speed) {
@@ -71,21 +78,27 @@ public class ArmSubsystems extends SubsystemBase {
   }
 
   public void moveArm(double speed) {
+    System.out.println("moveArm");
     elevationMotor.set(VictorSPXControlMode.PercentOutput, speed);
   }
 
   public void lengthenArm(double speed) {
-    extensionMotor.set(speed);
+    System.out.println("lengthenArm");
+    if (extensionLimit.get() && (speed < 0)) {
+      extensionMotor.set(0.0);
+    } else {
+      extensionMotor.set(speed);
+    }
   }
 
   public void stopElevation() {
-  // elevationMotor.set(0.025);
-  elevationMotor.set(VictorSPXControlMode.PercentOutput, 0.0);
+    // elevationMotor.set(0.025);
+    elevationMotor.set(VictorSPXControlMode.PercentOutput, 0.0);
 
   }
 
   public void stopExtension() {
-  extensionMotor.set(0.0);
+    extensionMotor.set(0.0);
   }
 
   public double getElevationDegrees() {
@@ -96,12 +109,12 @@ public class ArmSubsystems extends SubsystemBase {
     double armposition = getElevationDegrees();
     double output = pidController.calculate(armposition - pidController.getSetpoint());
     double outputC = -MathUtil.clamp(output, -speed, speed);
-    
-    if (pidController.atSetpoint() || armposition >= HIGH_DEGREES || armposition < 0){
+
+    if (pidController.atSetpoint() || armposition >= HIGH_DEGREES || armposition < 0) {
       stopElevation();
-    } else  {
+    } else {
       moveArm(outputC);
-      
+
     }
   }
 
@@ -110,7 +123,7 @@ public class ArmSubsystems extends SubsystemBase {
     double output = pidController.calculate(armposition - pidController.getSetpoint());
     double outputC = -MathUtil.clamp(output, -speed, speed);
 
-    if(pidController.atSetpoint() || armposition >= HIGH_INCHES || armposition < 0){
+    if (pidController.atSetpoint() || armposition >= HIGH_INCHES || armposition < 0) {
       stopExtension();
     } else {
       lengthenArm(outputC);

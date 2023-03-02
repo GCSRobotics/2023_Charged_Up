@@ -81,6 +81,8 @@ public class RobotContainer {
         PathPlanner.loadPath("Place and Charge 2", new PathConstraints(4, 3)));
     auton_chooser.addOption("Place and Charge 3",
         PathPlanner.loadPath("Place and Charge 3", new PathConstraints(4, 3)));
+    auton_chooser.addOption("Drive Back",
+        PathPlanner.loadPath("Drive Back", new PathConstraints(3, 3)));
 
     // Put the chooser on the dashboard
     SmartDashboard.putData(auton_chooser);
@@ -106,7 +108,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    
+
     driveController.button(12).onTrue(new InstantCommand(() -> swerveSub.zeroGyro()));
 
     // opController.y().onTrue(new SetToHigh(armSub));
@@ -119,10 +121,13 @@ public class RobotContainer {
     opController.povRight().whileTrue(new ExtendArm(armSub));
     opController.povLeft().whileTrue(new RetractArm(armSub));
 
-    opController.leftBumper().onTrue(new GrabCube(clawSub));
-    opController.rightBumper().onTrue(new ReleaseCube(clawSub));
-    opController.leftTrigger().onTrue(new GrabCone(clawSub));
-    opController.rightTrigger().onTrue(new ReleaseCone(clawSub));
+    // opController.leftStick().whileTrue(new RaiseArm(armSub, opController));
+    // opController.rightStick().whileTrue(new ExtendArm(armSub, opController));
+
+    opController.leftBumper().onTrue(new ReleaseCube(clawSub));
+    opController.rightBumper().onTrue(new GrabCube(clawSub));
+    opController.leftTrigger().onTrue(new ReleaseCone(clawSub));
+    opController.rightTrigger().onTrue(new GrabCone(clawSub));
 
     opController.start().onTrue(new IndicateLedColor(ledSub, Constants.CubeColor).withTimeout(5));
     opController.back().onTrue(new IndicateLedColor(ledSub, Constants.ConeColor).withTimeout(5));

@@ -9,6 +9,7 @@ import frc.robot.subsystems.ArmSubsystems;
 
 public class ExtendArm extends CommandBase {
   private ArmSubsystems armSubsystems;
+  
   /** Creates a new ExtendArm. */
   public ExtendArm(ArmSubsystems armSubsystems) {
     // Use addRequirements() here to declare subsystem dependencies.

@@ -39,23 +39,23 @@ public class ClawSubsystems extends SubsystemBase {
   }
 
   public void GrabCube() {
-    CubeSolenoid.set(Value.kForward);
+    CubeSolenoid.set(Value.kReverse);
     ConeSolenoid.set(Value.kReverse);
   }
 
   public void ReleaseCube() {
-    CubeSolenoid.set(Value.kReverse);
+    CubeSolenoid.set(Value.kForward);
     ConeSolenoid.set(Value.kReverse);
   }
 
   public void GrabCone() {
+    CubeSolenoid.set(Value.kReverse);
     ConeSolenoid.set(Value.kForward);
-    CubeSolenoid.set(Value.kForward);
   }
 
   public void ReleaseCone() {
+    CubeSolenoid.set(Value.kForward);
     ConeSolenoid.set(Value.kReverse);
-    CubeSolenoid.set(Value.kReverse);
   }
 
   // public void FlipUp() {
