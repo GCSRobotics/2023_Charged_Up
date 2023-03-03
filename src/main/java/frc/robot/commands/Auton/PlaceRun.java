@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.commands.Arm.MoveArm;
+import frc.robot.commands.Arm.MoveArmSimple;
 import frc.robot.commands.sequential.PickUpCube;
 import frc.robot.commands.sequential.PlaceCubeLow;
 import frc.robot.subsystems.ArmSubsystems;
@@ -33,6 +34,7 @@ public class PlaceRun extends SequentialCommandGroup {
       boolean isFirstPath) {
 
     HashMap<String, Command> eventMap = new HashMap<>();
+    eventMap.put("bump", new MoveArmSimple(armSubsystem).withTimeout(0.75));
     eventMap.put("place1", new MoveArm(armSubsystem, ArmSubsystems.FLOOR_DEGREES));
     eventMap.put("PickUp", new PickUpCube(clawSub, armSubsystem)); 
     eventMap.put("place2", new PlaceCubeLow(clawSub, armSubsystem));
