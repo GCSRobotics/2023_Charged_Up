@@ -13,6 +13,7 @@ import frc.robot.commands.Claw.GrabCone;
 import frc.robot.commands.Claw.GrabCube;
 import frc.robot.commands.Claw.ReleaseCone;
 import frc.robot.commands.Claw.ReleaseCube;
+import frc.robot.commands.Drive.Balance;
 import frc.robot.commands.Drive.DriveTeleop;
 import frc.robot.commands.LED.IndicateLedColor;
 import frc.robot.subsystems.ArmSubsystems;
@@ -111,7 +112,7 @@ public class RobotContainer {
 
     driveController.button(12).onTrue(new InstantCommand(() -> swerveSub.zeroGyro()));
 
-    // opController.y().onTrue(new SetToHigh(armSub));
+    opController.y().onTrue(new Balance(swerveSub));
     // opController.a().onTrue(new SetToFloor(armSub));
     // opController.b().onTrue(new SetToMid(armSub));
     // opController.x().onTrue(new SetToHome(armSub));

@@ -20,9 +20,8 @@ import frc.robot.Constants;
 
 public class ArmSubsystems extends SubsystemBase {
   private CANSparkMax extensionMotor = new CANSparkMax(Constants.EXTENSION_MOTOR_ID, MotorType.kBrushless);
-  // private CANSparkMax elevationMotor = new
-  // CANSparkMax(Constants.ELEVATION_MOTOR_ID, MotorType.kBrushless);
-  private VictorSPX elevationMotor = new VictorSPX(Constants.ELEVATION_MOTOR_ID);
+  private CANSparkMax elevationMotor = new CANSparkMax(Constants.ELEVATION_MOTOR_ID, MotorType.kBrushless);
+  //private VictorSPX elevationMotor = new VictorSPX(Constants.ELEVATION_MOTOR_ID);
   private RelativeEncoder elevationEncoder;
   private RelativeEncoder extensionEncoder;
   private DigitalInput extensionLimit = new DigitalInput(9);
@@ -39,12 +38,10 @@ public class ArmSubsystems extends SubsystemBase {
   /** Creates a new ArmSubsystems. */
   public ArmSubsystems() {
     elevationMotor.setInverted(false);
-    // elevationEncoder = elevationMotor.getEncoder();
-    // elevationEncoder.setPositionConversionFactor(Constants.ELEVATION_REVOLUTIONS_PER_DEGREE);
-    // elevationEncoder.setPosition(0);
-    // elevationMotor.setIdleMode(IdleMode.kBrake);
-    elevationMotor.setNeutralMode(NeutralMode.Brake);
-
+    elevationEncoder = elevationMotor.getEncoder();
+    elevationEncoder.setPositionConversionFactor(Constants.ELEVATION_REVOLUTIONS_PER_DEGREE);
+    elevationEncoder.setPosition(0);
+    elevationMotor.setIdleMode(IdleMode.kBrake);
     extensionMotor.setInverted(false);
     extensionEncoder = extensionMotor.getEncoder();
     extensionEncoder.setPositionConversionFactor(Constants.EXTENSION_REVOLUTIONS_PER_INCH);
@@ -70,16 +67,16 @@ public class ArmSubsystems extends SubsystemBase {
   }
 
   public void RaiseArm(double speed) {
-    elevationMotor.set(VictorSPXControlMode.PercentOutput, speed);
+    elevationMotor.set(speed);
   }
 
   public void LowerArm(double speed) {
-    elevationMotor.set(VictorSPXControlMode.PercentOutput, speed);
+    elevationMotor.set(speed);
   }
 
   public void moveArm(double speed) {
     System.out.println("moveArm");
-    elevationMotor.set(VictorSPXControlMode.PercentOutput, speed);
+    elevationMotor.set(speed);
   }
 
   public void lengthenArm(double speed) {
@@ -93,7 +90,7 @@ public class ArmSubsystems extends SubsystemBase {
 
   public void stopElevation() {
     // elevationMotor.set(0.025);
-    elevationMotor.set(VictorSPXControlMode.PercentOutput, 0.0);
+    elevationMotor.set(0.0);
 
   }
 

@@ -40,9 +40,9 @@ public class DriveTeleop extends CommandBase {
       // double xAxis = -controller.getLeftX();
       // double rAxis = -controller.getRightX();
 
-      double yAxis = -controller.getRawAxis(1) * 0.5;
-      double xAxis = -controller.getRawAxis(0) * 0.5;
-      double rAxis = -controller.getRawAxis(2) * 0.5;
+      double yAxis = -controller.getRawAxis(1) * 0.55;
+      double xAxis = -controller.getRawAxis(0) * 0.65;
+      double rAxis = -controller.getRawAxis(2) * 0.75;
       
       /* Deadbands */
       yAxis = (Math.abs(yAxis) < YDEADBAND) ? 0 : yAxis;

@@ -13,7 +13,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class Balance extends CommandBase {
   SwerveSubsystem swerve;
-  private final PIDController pidController = new PIDController(0.045, 0, 0.0025);
+  private final PIDController pidController = new PIDController(0.01  , 0, 0.0025);
 
   /** Creates a new Balance. */
   public Balance(SwerveSubsystem swerve) {
@@ -35,6 +35,11 @@ public class Balance extends CommandBase {
     double currentTip = (Math.abs(swerve.getRoll()) > Math.abs(swerve.getPitch())) ? 
       swerve.getRoll() : swerve.getPitch();
     double output = pidController.calculate(currentTip);
+    System.out.println(output);
+
+    if (swerve.getGyroAngleDegrees() > 90 && swerve.getGyroAngleDegrees() < 270) {
+      output = -output;
+    }
 
     SmartDashboard.putNumber("pitch", swerve.getRoll()) ;
     SmartDashboard.putNumber("output", output) ;
@@ -45,6 +50,8 @@ public class Balance extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    Translation2d translation = new Translation2d(0,.1);
+    swerve.drive(translation, 0, true, true);
     swerve.stopModules();
   }
 

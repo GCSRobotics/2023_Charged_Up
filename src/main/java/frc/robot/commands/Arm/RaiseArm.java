@@ -9,7 +9,7 @@ import frc.robot.subsystems.ArmSubsystems;
 
 public class RaiseArm extends CommandBase {
   private ArmSubsystems armSubsystems;
-  private double speed = .6;
+  private double speed = .2;
 
   /** Creates a new RaiseArm. */
   public RaiseArm(ArmSubsystems armSubsystems) {
