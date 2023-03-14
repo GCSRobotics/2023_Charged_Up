@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -76,14 +77,17 @@ public class RobotContainer {
   }
 
   private void loadTrajectories() {
+    PathPlannerTrajectory placeCharge1 = PathPlanner.loadPath("Place and Charge 1", new PathConstraints(4, 3));
     auton_chooser.setDefaultOption("Place and Charge 1",
-        PathPlanner.loadPath("Place and Charge 1", new PathConstraints(4, 3)));
+       placeCharge1);
     auton_chooser.addOption("Place and Charge 2",
         PathPlanner.loadPath("Place and Charge 2", new PathConstraints(4, 3)));
     auton_chooser.addOption("Place and Charge 3",
         PathPlanner.loadPath("Place and Charge 3", new PathConstraints(4, 3)));
     auton_chooser.addOption("Drive Back",
         PathPlanner.loadPath("Drive Back", new PathConstraints(3, 3)));
+    auton_chooser.addOption("Center and Balance",
+        PathPlanner.loadPath("Center and Balance", new PathConstraints(1.0, 1.0)));
 
     // Put the chooser on the dashboard
     SmartDashboard.putData(auton_chooser);
@@ -143,7 +147,11 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     PathPlannerTrajectory trajectory = auton_chooser.getSelected();
 
-    return new PlaceRun(armSub, clawSub, swerveSub, trajectory, false);
+    return new SequentialCommandGroup(
+      new PlaceRun(armSub, clawSub, swerveSub, trajectory, true),
+      new Balance(swerveSub)
+    );
+    
 
   }
 }
