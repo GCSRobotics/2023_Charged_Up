@@ -7,12 +7,12 @@ package frc.robot.commands.Claw;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystems;
 
-public class GrabCone extends CommandBase {
+public class Grab extends CommandBase {
 
   private ClawSubsystems clawSubsystems;
 
   /** Creates a new GrabCone. */
-  public GrabCone(ClawSubsystems clawSubsystems) {
+  public Grab(ClawSubsystems clawSubsystems) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.clawSubsystems=clawSubsystems;
     addRequirements(this.clawSubsystems);
@@ -25,7 +25,7 @@ public class GrabCone extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    clawSubsystems.GrabCone();
+    clawSubsystems.Grab();
   }
 
   // Called once the command ends or is interrupted.

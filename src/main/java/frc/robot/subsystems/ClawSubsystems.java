@@ -12,10 +12,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ClawSubsystems extends SubsystemBase {
-  private static final DoubleSolenoid CubeSolenoid = new DoubleSolenoid(5, PneumaticsModuleType.REVPH,
+  private static final DoubleSolenoid solenoid = new DoubleSolenoid(5, PneumaticsModuleType.REVPH,
       Constants.GrabChannel, Constants.ReleaseChannel);
-  private static final DoubleSolenoid ConeSolenoid = new DoubleSolenoid(5, PneumaticsModuleType.REVPH,
-      Constants.ConeChannelIn, Constants.ConeChannelOut);
 
   // private static final DoubleSolenoid FlipSolenoid = new
   // DoubleSolenoid(PneumaticsModuleType.CTREPCM,
@@ -38,24 +36,12 @@ public class ClawSubsystems extends SubsystemBase {
     // }
   }
 
-  public void GrabCube() {
-    CubeSolenoid.set(Value.kReverse);
-    ConeSolenoid.set(Value.kReverse);
+  public void Grab() {
+    solenoid.set(Value.kReverse);
   }
 
-  public void ReleaseCube() {
-    CubeSolenoid.set(Value.kForward);
-    ConeSolenoid.set(Value.kReverse);
-  }
-
-  public void GrabCone() {
-    CubeSolenoid.set(Value.kReverse);
-    ConeSolenoid.set(Value.kForward);
-  }
-
-  public void ReleaseCone() {
-    CubeSolenoid.set(Value.kForward);
-    ConeSolenoid.set(Value.kReverse);
+  public void Release() {
+    solenoid.set(Value.kForward);
   }
 
   // public void FlipUp() {
