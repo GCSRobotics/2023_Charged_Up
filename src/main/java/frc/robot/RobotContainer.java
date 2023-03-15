@@ -9,13 +9,15 @@ import frc.robot.commands.Arm.LowerArm;
 import frc.robot.commands.Arm.RaiseArm;
 import frc.robot.commands.Arm.RetractArm;
 import frc.robot.commands.Auton.PlaceRun;
-import frc.robot.commands.Claw.GrabCone;
-import frc.robot.commands.Claw.GrabCube;
-import frc.robot.commands.Claw.ReleaseCone;
-import frc.robot.commands.Claw.ReleaseCube;
+import frc.robot.commands.Claw.Grab;
+import frc.robot.commands.Claw.Release;
 import frc.robot.commands.Drive.Balance;
 import frc.robot.commands.Drive.DriveTeleop;
 import frc.robot.commands.LED.IndicateLedColor;
+import frc.robot.commands.sequential.SetToFloor;
+import frc.robot.commands.sequential.SetToHigh;
+import frc.robot.commands.sequential.SetToHome;
+import frc.robot.commands.sequential.SetToMid;
 import frc.robot.subsystems.ArmSubsystems;
 import frc.robot.subsystems.ClawSubsystems;
 import frc.robot.subsystems.LEDSubsystem;
@@ -77,9 +79,8 @@ public class RobotContainer {
   }
 
   private void loadTrajectories() {
-    PathPlannerTrajectory placeCharge1 = PathPlanner.loadPath("Place and Charge 1", new PathConstraints(4, 3));
     auton_chooser.setDefaultOption("Place and Charge 1",
-       placeCharge1);
+    PathPlanner.loadPath("Place and Charge 1", new PathConstraints(4, 3)));
     auton_chooser.addOption("Place and Charge 2",
         PathPlanner.loadPath("Place and Charge 2", new PathConstraints(4, 3)));
     auton_chooser.addOption("Place and Charge 3",
@@ -116,10 +117,10 @@ public class RobotContainer {
 
     driveController.button(12).onTrue(new InstantCommand(() -> swerveSub.zeroGyro()));
 
-    opController.y().onTrue(new Balance(swerveSub));
-    // opController.a().onTrue(new SetToFloor(armSub));
-    // opController.b().onTrue(new SetToMid(armSub));
-    // opController.x().onTrue(new SetToHome(armSub));
+    opController.y().onTrue(new SetToHigh(armSub));
+    opController.a().onTrue(new SetToFloor(armSub));
+    opController.b().onTrue(new SetToMid(armSub));
+    opController.x().onTrue(new SetToHome(armSub));
 
     opController.povUp().whileTrue(new RaiseArm(armSub));
     opController.povDown().whileTrue(new LowerArm(armSub));
@@ -129,10 +130,10 @@ public class RobotContainer {
     // opController.leftStick().whileTrue(new RaiseArm(armSub, opController));
     // opController.rightStick().whileTrue(new ExtendArm(armSub, opController));
 
-    opController.leftBumper().onTrue(new ReleaseCube(clawSub));
-    opController.rightBumper().onTrue(new GrabCube(clawSub));
-    opController.leftTrigger().onTrue(new ReleaseCone(clawSub));
-    opController.rightTrigger().onTrue(new GrabCone(clawSub));
+    opController.leftBumper().onTrue(new Release(clawSub));
+    opController.rightBumper().onTrue(new Grab(clawSub));
+    opController.leftTrigger().onTrue(new Release(clawSub));
+    opController.rightTrigger().onTrue(new Grab(clawSub));
 
     opController.start().onTrue(new IndicateLedColor(ledSub, Constants.CubeColor).withTimeout(5));
     opController.back().onTrue(new IndicateLedColor(ledSub, Constants.ConeColor).withTimeout(5));

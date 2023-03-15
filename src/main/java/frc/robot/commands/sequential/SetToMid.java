@@ -18,7 +18,7 @@ public class SetToMid extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new PositionArm(armSub, ArmSubsystems.FLOOR_INCHES),
+      new PositionArm(armSub, ArmSubsystems.HOME_INCHES),
       new MoveArm(armSub, ArmSubsystems.MID_DEGREES),
       new PositionArm(armSub, ArmSubsystems.MID_INCHES)
     );

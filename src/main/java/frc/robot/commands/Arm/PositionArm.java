@@ -11,7 +11,7 @@ import frc.robot.subsystems.ArmSubsystems;
 public class PositionArm extends CommandBase {
   private ArmSubsystems armSubsystems;
   private PIDController pidController = new PIDController(0.1, 0, 0);
-  private double speed = 0.15;
+  private double speed = 0.5;
   private double inchesPosition;
 
   /** Creates a new PositionArm. */
@@ -19,7 +19,7 @@ public class PositionArm extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     this.armSubsystems = armSubsystems;
     this.inchesPosition = inchesPosition;
-    
+    System.out.println("Setpoint inches: " + inchesPosition);
     addRequirements(this.armSubsystems);
 }
 
@@ -45,6 +45,6 @@ public class PositionArm extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return pidController.atSetpoint();
   }
 }

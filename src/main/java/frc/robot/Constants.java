@@ -159,26 +159,24 @@ public final class Constants {
   public static final int EXTENSION_MOTOR_ID  = 42;
   public static final int ELEVATION_MOTOR_ID  = 41;
 
-  public static final int GrabChannel = 0;  
-  public static final int ReleaseChannel= 1;
-  public static final int ConeChannelIn = 14;  
-  public static final int ConeChannelOut= 15;
+  public static final int GrabChannel = 8;  
+  public static final int ReleaseChannel= 9;
 
 
 //   public static final int FlipUpChannel = 2;
 //   public static final int FlipDownChannel = 3;
 
       // Turret Rotation Calculations
-      public final static double TopDiameter = 3.5; // 13.5;
-      public final static double BottomDiameter = 3.5; // 1.751;
+      public final static double TopTeeth = 36; // 13.5;
+      public final static double BottomTeeth = 22; // 1.751;
       public final static double ElevationGearRatio = 125;
 //      public final static double TurretRevolutionsPerDegree = 360 / (TurretDiameter/TurretSprocketDiameter*TurretGearRatio); // ~1.868;
   
-    public static final double ELEVATION_REVOLUTIONS_PER_DEGREE = 360 / ElevationGearRatio;
+    public static final double ELEVATION_REVOLUTIONS_PER_DEGREE = 360 / (TopTeeth/BottomTeeth*ElevationGearRatio);
     
-    public static final double NEO_COUNTS_PER_REV = 42;
+    // public static final double NEO_COUNTS_PER_REV = 42;
     public static final double EXTENSION_GEAR_RATIO = 12;
-    public static final double DIAMETER = .6;
-    public static final double EXTENSION_REVOLUTIONS_PER_INCH = NEO_COUNTS_PER_REV / Math.PI * DIAMETER * EXTENSION_GEAR_RATIO;
+    public static final double DIAMETER = .9;
+    public static final double EXTENSION_REVOLUTIONS_PER_INCH = (Math.PI * DIAMETER) / EXTENSION_GEAR_RATIO ;
 
 }

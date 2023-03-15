@@ -15,6 +15,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -27,13 +28,13 @@ public class ArmSubsystems extends SubsystemBase {
   private DigitalInput extensionLimit = new DigitalInput(9);
 
   public static final double HOME_DEGREES = 0;
-  public static final double FLOOR_DEGREES = 25;
+  public static final double FLOOR_DEGREES = 20;
   public static final double MID_DEGREES = 65;
   public static final double HIGH_DEGREES = 90;
   public static final double HOME_INCHES = 0;
-  public static final double FLOOR_INCHES = 15;
-  public static final double MID_INCHES = 26;
-  public static final double HIGH_INCHES = 44;
+  public static final double FLOOR_INCHES = 9;
+  public static final double MID_INCHES = 17;
+  public static final double HIGH_INCHES = 26;
 
   /** Creates a new ArmSubsystems. */
   public ArmSubsystems() {
@@ -42,16 +43,20 @@ public class ArmSubsystems extends SubsystemBase {
     elevationEncoder.setPositionConversionFactor(Constants.ELEVATION_REVOLUTIONS_PER_DEGREE);
     elevationEncoder.setPosition(0);
     elevationMotor.setIdleMode(IdleMode.kBrake);
+    
     extensionMotor.setInverted(false);
     extensionEncoder = extensionMotor.getEncoder();
     extensionEncoder.setPositionConversionFactor(Constants.EXTENSION_REVOLUTIONS_PER_INCH);
     extensionEncoder.setPosition(0);
     extensionMotor.setIdleMode(IdleMode.kBrake);
+
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Elevation Degree", elevationEncoder.getPosition());
+    SmartDashboard.putNumber("Extension Position", extensionEncoder.getPosition());
   }
 
   public void ExtendArm() {
@@ -67,10 +72,12 @@ public class ArmSubsystems extends SubsystemBase {
   }
 
   public void RaiseArm(double speed) {
+    System.out.println("Position: " + getElevationDegrees() );
     elevationMotor.set(speed);
   }
 
   public void LowerArm(double speed) {
+    System.out.println("Position: " + getElevationDegrees() );
     elevationMotor.set(speed);
   }
 
@@ -81,11 +88,11 @@ public class ArmSubsystems extends SubsystemBase {
 
   public void lengthenArm(double speed) {
     System.out.println("lengthenArm");
-    if (extensionLimit.get() && (speed < 0)) {
-      extensionMotor.set(0.0);
-    } else {
+    // if (extensionLimit.get() && (speed < 0)) {
+    //   extensionMotor.set(0.0);
+    // } else {
       extensionMotor.set(speed);
-    }
+    // }
   }
 
   public void stopElevation() {
@@ -103,9 +110,11 @@ public class ArmSubsystems extends SubsystemBase {
   }
 
   public void moveArmToDegrees(PIDController pidController, double speed) {
+    
     double armposition = getElevationDegrees();
-    double output = pidController.calculate(armposition - pidController.getSetpoint());
-    double outputC = -MathUtil.clamp(output, -speed, speed);
+    double output = pidController.calculate(armposition);
+    double outputC = MathUtil.clamp(output, -speed, speed);
+    System.out.println("Degrees: " + armposition );
 
     if (pidController.atSetpoint() || armposition >= HIGH_DEGREES || armposition < 0) {
       stopElevation();
@@ -117,8 +126,11 @@ public class ArmSubsystems extends SubsystemBase {
 
   public void extendArmToInches(PIDController pidController, double speed) {
     double armposition = extensionEncoder.getPosition();
-    double output = pidController.calculate(armposition - pidController.getSetpoint());
-    double outputC = -MathUtil.clamp(output, -speed, speed);
+    double output = pidController.calculate(armposition);
+    double outputC = MathUtil.clamp(output, -speed, speed);
+    System.out.println("Length: " + armposition );
+    System.out.println("Length Setpoint: " + pidController.getSetpoint() );
+    System.out.println("outputC: " + outputC );
 
     if (pidController.atSetpoint() || armposition >= HIGH_INCHES || armposition < 0) {
       stopExtension();
