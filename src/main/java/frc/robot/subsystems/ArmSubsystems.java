@@ -29,12 +29,12 @@ public class ArmSubsystems extends SubsystemBase {
 
   public static final double HOME_DEGREES = 0;
   public static final double FLOOR_DEGREES = 20;
-  public static final double MID_DEGREES = 65;
-  public static final double HIGH_DEGREES = 90;
+  public static final double MID_DEGREES = 75;
+  public static final double HIGH_DEGREES = 85;
   public static final double HOME_INCHES = 0;
-  public static final double FLOOR_INCHES = 9;
-  public static final double MID_INCHES = 17;
-  public static final double HIGH_INCHES = 26;
+  public static final double FLOOR_INCHES = 6;
+  public static final double MID_INCHES = 7;
+  public static final double HIGH_INCHES = 23;
 
   /** Creates a new ArmSubsystems. */
   public ArmSubsystems() {
@@ -72,22 +72,22 @@ public class ArmSubsystems extends SubsystemBase {
   }
 
   public void RaiseArm(double speed) {
-    System.out.println("Position: " + getElevationDegrees() );
+    // System.out.println("Position: " + getElevationDegrees() );
     elevationMotor.set(speed);
   }
 
   public void LowerArm(double speed) {
-    System.out.println("Position: " + getElevationDegrees() );
+    // System.out.println("Position: " + getElevationDegrees() );
     elevationMotor.set(speed);
   }
 
   public void moveArm(double speed) {
-    System.out.println("moveArm");
+    // System.out.println("moveArm");
     elevationMotor.set(speed);
   }
 
   public void lengthenArm(double speed) {
-    System.out.println("lengthenArm");
+    // System.out.println("lengthenArm");
     // if (extensionLimit.get() && (speed < 0)) {
     //   extensionMotor.set(0.0);
     // } else {
@@ -116,7 +116,7 @@ public class ArmSubsystems extends SubsystemBase {
     double outputC = MathUtil.clamp(output, -speed, speed);
     System.out.println("Degrees: " + armposition );
 
-    if (pidController.atSetpoint() || armposition >= HIGH_DEGREES || armposition < 0) {
+    if (pidController.atSetpoint() || (armposition >= HIGH_DEGREES && outputC > 0) || (armposition < 0 && outputC < 0)) {
       stopElevation();
     } else {
       moveArm(outputC);
@@ -129,10 +129,10 @@ public class ArmSubsystems extends SubsystemBase {
     double output = pidController.calculate(armposition);
     double outputC = MathUtil.clamp(output, -speed, speed);
     System.out.println("Length: " + armposition );
-    System.out.println("Length Setpoint: " + pidController.getSetpoint() );
-    System.out.println("outputC: " + outputC );
+    // System.out.println("Length Setpoint: " + pidController.getSetpoint() );
+    // System.out.println("outputC: " + outputC );
 
-    if (pidController.atSetpoint() || armposition >= HIGH_INCHES || armposition < 0) {
+    if (pidController.atSetpoint() || (armposition >= HIGH_INCHES && outputC > 0) || (armposition < 0 && outputC < 0)) {
       stopExtension();
     } else {
       lengthenArm(outputC);

@@ -11,7 +11,7 @@ import frc.robot.subsystems.ArmSubsystems;
 public class PositionArm extends CommandBase {
   private ArmSubsystems armSubsystems;
   private PIDController pidController = new PIDController(0.1, 0, 0);
-  private double speed = 0.5;
+  private double speed = 0.65;
   private double inchesPosition;
 
   /** Creates a new PositionArm. */
@@ -19,7 +19,6 @@ public class PositionArm extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     this.armSubsystems = armSubsystems;
     this.inchesPosition = inchesPosition;
-    System.out.println("Setpoint inches: " + inchesPosition);
     addRequirements(this.armSubsystems);
 }
 
@@ -27,7 +26,7 @@ public class PositionArm extends CommandBase {
   @Override
   public void initialize() {
     pidController.setSetpoint(inchesPosition);
-    pidController.setTolerance(2.0);
+    pidController.setTolerance(.5);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
