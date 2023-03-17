@@ -35,6 +35,7 @@ public class LEDSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        System.out.println("LED Periodic");
         // This method will be called once per scheduler run
         if (b_useRainbow) {
             useRainbow();
