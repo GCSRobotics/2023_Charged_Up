@@ -10,8 +10,8 @@ import frc.robot.subsystems.ArmSubsystems;
 
 public class PositionArm extends CommandBase {
   private ArmSubsystems armSubsystems;
-  private PIDController pidController = new PIDController(0.1, 0, 0);
-  private double speed = 0.65;
+  private PIDController pidController = new PIDController(0.1, 0.5, 0);
+  private double speed = 1.0;
   private double inchesPosition;
 
   /** Creates a new PositionArm. */

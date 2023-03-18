@@ -32,11 +32,11 @@ public class ArmSubsystems extends SubsystemBase {
   public static final double MID_DEGREES = 75;
   public static final double HIGH_DEGREES = 85;
   public static final double HOME_INCHES = 0;
-  public static final double FLOOR_INCHES = 6;
+  public static final double FLOOR_INCHES = 8;
   public static final double MID_INCHES = 7;
   public static final double HIGH_INCHES = 23;
 
-  /** Creates a new ArmSubsystems. */
+  /** Creates a new ArmSubsystems. */ 
   public ArmSubsystems() {
     elevationMotor.setInverted(false);
     elevationEncoder = elevationMotor.getEncoder();
@@ -114,7 +114,7 @@ public class ArmSubsystems extends SubsystemBase {
     double armposition = getElevationDegrees();
     double output = pidController.calculate(armposition);
     double outputC = MathUtil.clamp(output, -speed, speed);
-    System.out.println("Degrees: " + armposition );
+    // System.out.println("Degrees: " + armposition );
 
     if (pidController.atSetpoint() || (armposition >= HIGH_DEGREES && outputC > 0) || (armposition < 0 && outputC < 0)) {
       stopElevation();
@@ -128,7 +128,7 @@ public class ArmSubsystems extends SubsystemBase {
     double armposition = extensionEncoder.getPosition();
     double output = pidController.calculate(armposition);
     double outputC = MathUtil.clamp(output, -speed, speed);
-    System.out.println("Length: " + armposition );
+    // System.out.println("Length: " + armposition );
     // System.out.println("Length Setpoint: " + pidController.getSetpoint() );
     // System.out.println("outputC: " + outputC );
 

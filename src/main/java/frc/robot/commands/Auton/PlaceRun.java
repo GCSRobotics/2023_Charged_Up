@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.commands.Arm.MoveArm;
 import frc.robot.commands.Arm.MoveArmSimple;
+import frc.robot.commands.sequential.InitialPlace;
 import frc.robot.commands.sequential.PickUpCube;
 import frc.robot.commands.sequential.PlaceCubeLow;
 import frc.robot.subsystems.ArmSubsystems;
@@ -38,6 +39,7 @@ public class PlaceRun extends SequentialCommandGroup {
     eventMap.put("place1", new MoveArm(armSubsystem, ArmSubsystems.FLOOR_DEGREES));
     eventMap.put("PickUp", new PickUpCube(clawSub, armSubsystem)); 
     eventMap.put("place2", new PlaceCubeLow(clawSub, armSubsystem));
+    eventMap.put("initial_place", new InitialPlace(clawSub, armSubsystem));
 
 
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(

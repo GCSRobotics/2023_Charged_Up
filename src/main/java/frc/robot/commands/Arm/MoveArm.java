@@ -11,7 +11,7 @@ import frc.robot.subsystems.ArmSubsystems;
 public class MoveArm extends CommandBase {
   private ArmSubsystems armSubsystems;
   private PIDController pidController = new PIDController(0.1, 0, 0);
-  private double speed = 0.2;
+  private double speed = 0.35;
   private double degreePosition;
 
   /** Creates a new MoveArm. */
