@@ -39,8 +39,8 @@ public class SwerveSubsystem extends SubsystemBase {
     this.swerveModules = new SwerveModule[] {
         new SwerveModule(0, Constants.SwerveDrivetrain.Mod0.constants),
         new SwerveModule(1, Constants.SwerveDrivetrain.Mod1.constants),
-        new SwerveModule(2, Constants.SwerveDrivetrain.Mod2.constants),
-        new SwerveModule(3, Constants.SwerveDrivetrain.Mod3.constants)
+        new SwerveModule(3, Constants.SwerveDrivetrain.Mod2.constants),
+        new SwerveModule(2, Constants.SwerveDrivetrain.Mod3.constants)
     };
 
     this.swerveOdometry = new SwerveDriveOdometry(Constants.SwerveDrivetrain.SWERVE_KINEMATICS, this.getYaw(),

@@ -13,8 +13,8 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class DriveTeleop extends CommandBase {
   /** Creates a new Drive. */
   
-  private static final double XDEADBAND = 0.15;
-  private static final double YDEADBAND = 0.15;
+  private static final double XDEADBAND = 0.1;
+  private static final double YDEADBAND = 0.1;
   private static final double RDEADBAND = 0.2;
 
   private double rotation;

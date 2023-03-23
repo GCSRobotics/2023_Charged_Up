@@ -14,6 +14,7 @@ import frc.robot.commands.Claw.Release;
 import frc.robot.commands.Drive.Balance;
 import frc.robot.commands.Drive.DriveTeleop;
 import frc.robot.commands.LED.IndicateLedColor;
+import frc.robot.commands.sequential.InitialPlace;
 import frc.robot.commands.sequential.SetToFloor;
 import frc.robot.commands.sequential.SetToHigh;
 import frc.robot.commands.sequential.SetToHome;
@@ -149,10 +150,10 @@ public class RobotContainer {
     PathPlannerTrajectory trajectory = auton_chooser.getSelected();
 
     return new SequentialCommandGroup(
+      new InitialPlace(clawSub, armSub),
       new PlaceRun(armSub, clawSub, swerveSub, trajectory, true),
       new Balance(swerveSub)
     );
     
-
   }
 }

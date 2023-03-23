@@ -19,9 +19,9 @@ public class InitialPlace extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new Grab(clawSub),
+      new Grab(clawSub).withTimeout(.25),
       new SetToHigh(armSub),
-      new Release(clawSub),
+      new Release(clawSub).withTimeout(.5),
       new SetToHome(armSub)
     );
   }
