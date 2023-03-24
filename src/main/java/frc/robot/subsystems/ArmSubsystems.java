@@ -30,7 +30,7 @@ public class ArmSubsystems extends SubsystemBase {
   public static final double HOME_DEGREES = 0;
   public static final double FLOOR_DEGREES = 10;
   public static final double MID_DEGREES = 60;
-  public static final double HIGH_DEGREES = 75;
+  public static final double HIGH_DEGREES = 80;
   public static final double HOME_INCHES = 0;
   public static final double FLOOR_INCHES = 10;
   public static final double MID_INCHES = 7;
