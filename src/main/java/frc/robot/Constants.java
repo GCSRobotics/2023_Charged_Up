@@ -54,7 +54,7 @@ public final class Constants {
 
         public static final int DRIVE_CONTINUOUS_CL = 35;
         public static final int DRIVE_PEAK_CL       = 50;  // 60
-        public static final double DRIVE_PEAK_CURRENT_DURATION = 0.1;
+        public static final doucble DRIVE_PEAK_CURRENT_DURATION = 0.1;
         public static final boolean DRIVE_ENABLE_CURRENT_LIMIT = true;
 
         /* Angle Motor PID Values */
@@ -75,7 +75,7 @@ public final class Constants {
         public static final double FF_kA    = (0.00337 / 12);   // 0.27
 
         /* Swerve Profiling Values */
-        public static final double MAX_SPEED            = 4.5;  // m/s
+        public static final double MAX_SPEED            = 5.0;  // m/s
         public static final double MAX_ANGULAR_VELOCITY = 7.5; // m/s
 
         /* Neutral Modes */
